@@ -113,16 +113,24 @@ class MainTests(unittest.TestCase):
     def test_book_detail_logged_out(self):
         """Test that the book appears on its detail page."""
         # TODO: Use helper functions to create books, authors, user
+        create_user()
+        create_books()
 
         # TODO: Make a GET request to the URL /book/1, check to see that the
         # status code is 200
+        res = self.app.get('/book/1', follow_redirects=True)
+        self.assertEqual(res.status_code, 200)
 
         # TODO: Check that the response contains the book's title, publish date,
         # and author's name
+        res_text = res.get_data(as_text=True)
+        self.assertIn('To Kill a Mockingbird', res_text)
+        self.assertIn('Author: Harper Lee', res_text)
+        self.assertIn('1960-07-11', res_text)
 
         # TODO: Check that the response does NOT contain the 'Favorite' button
         # (it should only be shown to logged in users)
-        pass
+        self.assertNotIn('Favorite', res_text)
 
     def test_book_detail_logged_in(self):
         """Test that the book appears on its detail page."""
