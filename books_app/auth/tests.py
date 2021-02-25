@@ -2,7 +2,7 @@ import os
 from unittest import TestCase
 
 from datetime import date
- 
+
 from books_app import app, db, bcrypt
 from books_app.models import Book, Author, User, Audience
 
@@ -14,6 +14,7 @@ python -m unittest books_app.main.tests
 #################################################
 # Setup
 #################################################
+
 
 def create_books():
     a1 = Author(name='Harper Lee')
@@ -29,6 +30,7 @@ def create_books():
     db.session.add(b2)
     db.session.commit()
 
+
 def create_user():
     password_hash = bcrypt.generate_password_hash('password').decode('utf-8')
     user = User(username='me1', password=password_hash)
@@ -39,9 +41,10 @@ def create_user():
 # Tests
 #################################################
 
+
 class AuthTests(TestCase):
     """Tests for authentication (login & signup)."""
- 
+
     def setUp(self):
         """Executed prior to each test."""
         app.config['TESTING'] = True
@@ -139,4 +142,12 @@ class AuthTests(TestCase):
         # - Log the user in (make a POST request to /login)
         # - Make a GET request to /logout
         # - Check that the "login" button appears on the homepage
-        pass
+        data = {
+            'username': 'test',
+            'password': 'test',
+        }
+        self.app.post('/signup', data=data)
+        self.app.post('/login', data=data)
+        res = self.app.get('/logout', follow_redirects=True)
+        res_text = res.get_data(as_text=True)
+        self.assertIn('Log In', res_text)
