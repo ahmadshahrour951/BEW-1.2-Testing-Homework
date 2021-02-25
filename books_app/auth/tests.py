@@ -57,6 +57,14 @@ class AuthTests(TestCase):
         # - Make a POST request to /signup, sending a username & password
         # - Check that the user now exists in the database
         pass
+        data = {
+            'username': 'test',
+            'password': 'test',
+        }
+        self.app.post('/signup', data=data)
+        user = User.query.filter_by(username='test').one()
+        self.assertIsNotNone(user)
+        self.assertEqual('test', user.username)
 
     def test_signup_existing_user(self):
         # TODO: Write a test for the signup route. It should:
