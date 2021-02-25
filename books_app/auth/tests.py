@@ -87,7 +87,15 @@ class AuthTests(TestCase):
         # - Create a user
         # - Make a POST request to /login, sending the created username & password
         # - Check that the "login" button is not displayed on the homepage
-        pass
+        data = {
+            'username': 'test',
+            'password': 'test',
+        }
+        self.app.post('/signup', data=data)
+        res = self.app.post('/login', data=data,  follow_redirects=True)
+        res_text = res.get_data(as_text=True)
+        self.assertNotIn('Log In', res_text)
+        self.assertIn('You are logged in as test', res_text)
 
     def test_login_nonexistent_user(self):
         # TODO: Write a test for the login route. It should:
