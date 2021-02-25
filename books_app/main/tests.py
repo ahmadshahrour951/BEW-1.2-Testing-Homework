@@ -286,9 +286,21 @@ class MainTests(unittest.TestCase):
 
     def test_unfavorite_book(self):
         # TODO: Login as the user me1, and add book with id 1 to me1's favorites
+        create_user()
+        login(self.app, 'me1', 'password')
+        create_books()
 
         # TODO: Make a POST request to the /unfavorite/1 route
+        data = {
+            'name': 'Khaled Hosseini',
+            'biography': 'He\'s an Afghan-American novelist, physician, activist, humanitarian and UNHCR goodwill ambassador.',
+        }
+        self.app.post('/favorite/1', data=data)
+        self.app.post('/unfavorite/1')
 
         # TODO: Verify that the book with id 1 was removed from the user's 
         # favorites
-        pass
+        user = User.query.filter_by(username='me1').one()
+        favorites = user.favorite_books
+
+        self.assertEqual(0, len(favorites))
