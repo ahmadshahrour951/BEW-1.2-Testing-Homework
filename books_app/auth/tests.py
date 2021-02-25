@@ -102,7 +102,16 @@ class AuthTests(TestCase):
         # - Make a POST request to /login, sending a username & password
         # - Check that the login form is displayed again, with an appropriate
         #   error message
-        pass
+        data = {
+            'username': 'test_2',
+            'password': 'test_2',
+        }
+        res = self.app.post(
+            '/login', data=data,  follow_redirects=True)
+        res_text = res.get_data(as_text=True)
+        self.assertNotIn('Log Out', res_text)
+        self.assertIn(
+            'No user with that username. Please try again.', res_text)
 
     def test_login_incorrect_password(self):
         # TODO: Write a test for the login route. It should:
