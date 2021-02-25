@@ -120,7 +120,18 @@ class AuthTests(TestCase):
         #   an incorrect password
         # - Check that the login form is displayed again, with an appropriate
         #   error message
-        pass
+        data = {
+            'username': 'test',
+            'password': 'test',
+        }
+        self.app.post('/signup', data=data)
+        data['password'] = 'test_2'
+        res = self.app.post(
+            '/login', data=data,  follow_redirects=True)
+        res_text = res.get_data(as_text=True)
+        self.assertNotIn('Log Out', res_text)
+        self.assertIn(
+            "Password doesn&#39;t match. Please try again.", res_text)
 
     def test_logout(self):
         # TODO: Write a test for the logout route. It should:
