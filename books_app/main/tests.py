@@ -250,10 +250,20 @@ class MainTests(unittest.TestCase):
         self.assertIsNotNone(new_genre)
 
     def test_profile_page(self):
+        create_user()
+        create_books()
+        login(self.app, 'me1', 'password')
+
         # TODO: Make a GET request to the /profile/1 route
+        res = self.app.get('/profile/me1', follow_redirects=True)
+        self.assertEqual(res.status_code, 200)
 
         # TODO: Verify that the response shows the appropriate user info
-        pass
+        res_text = res.get_data(as_text=True)
+
+        self.assertIn('me1', res_text)
+        self.assertIn('Log Out', res_text)
+        self.assertIn("me1's favorite books are:", res_text)
 
     def test_favorite_book(self):
         # TODO: Login as the user me1
