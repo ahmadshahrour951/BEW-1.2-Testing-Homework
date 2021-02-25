@@ -4,7 +4,7 @@ import unittest
 from datetime import date
  
 from books_app import app, db, bcrypt
-from books_app.models import Book, Author, User, Audience
+from books_app.models import Book, Author, User, Audience, Genre
 
 """
 Run these tests with the command:
@@ -236,9 +236,18 @@ class MainTests(unittest.TestCase):
 
     def test_create_genre(self):
         # TODO: Make a POST request to the /create_genre route, 
+        create_user()
+        create_books()
+        login(self.app, 'me1', 'password')
 
         # TODO: Verify that the genre was updated in the database
-        pass
+        data = {
+          'name': 'Chatni'
+        }
+        self.app.post('/create_genre', data=data)
+        new_genre = Genre.query.filter_by(
+            name='Chatni').one()
+        self.assertIsNotNone(new_genre)
 
     def test_profile_page(self):
         # TODO: Make a GET request to the /profile/1 route
