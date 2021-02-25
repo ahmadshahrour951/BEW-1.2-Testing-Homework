@@ -219,9 +219,20 @@ class MainTests(unittest.TestCase):
     def test_create_author(self):
         """Test creating an author."""
         # TODO: Make a POST request to the /create_author route
+        create_user()
+        create_books()
+        login(self.app, 'me1', 'password')
+        data = {
+            'name': 'Khaled Hosseini',
+            'biography': 'He\'s an Afghan-American novelist, physician, activist, humanitarian and UNHCR goodwill ambassador.',
+        }
+        self.app.post('/create_author', data=data)
 
         # TODO: Verify that the author was updated in the database
-        pass
+        new_author = Author.query.filter_by(name='Khaled Hosseini').one()
+        self.assertIsNotNone(new_author)
+        self.assertEqual(new_author.biography,
+                         'He\'s an Afghan-American novelist, physician, activist, humanitarian and UNHCR goodwill ambassador.')
 
     def test_create_genre(self):
         # TODO: Make a POST request to the /create_genre route, 
